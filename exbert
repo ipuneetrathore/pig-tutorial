@@ -1,0 +1,69 @@
+EXBERT
+
+White paper: https://arxiv.org/pdf/1910.05276.pdf
+Github: https://github.com/bhoov/exbert
+Website: https://exbert.net/
+
+EXBERT, an interactive tool named afterthe popular BERT language model, that provides insights into the meaning of thecontextual 
+representations by matching a human-specified input to similar contextsin a large annotated dataset. By aggregating the annotations of 
+the matching similarcontexts,EXBERThelps intuitively explain what each attention-head has learned.
+
+It is not yet well-understood what information BERT encodes and how it uses the attention. To addressthis challenge, some research has 
+focused on understanding whether BERT learns linguistic featuressuch as Part Of Speech (POS), Dependency relationships (DEP), or 
+Named Entity Recognition(NER) . Clark et al. [2019] found that heads at different layers learn specific linguistic structuredespite being 
+trained in a completely unsupervised manner, although many heads ostensibly learn redundancies.  Voita et al. [2019] further explore 
+the nature of several specialized attention-headsto show that BERT depends on only a subset of the total heads and that overall model 
+performancecould be maintained when some heads were pruned.
+
+EXBERT provides insights into both the attention and the token embeddings for theuser-defined model and corpus by probing whether the 
+representations capture metadata such aslinguistic features or positional information.
+
+
+Transformer Models and Analysis
+
+A seprate blog previously written on this topic is available here <-----------------------------------URL
+
+The Transformer model architecture as defined by Vaswani et al. [2017] relies on multiple sequentialapplicationsself attentionlayers. 
+Self attention is the process by which each token within a sequenceof inputsYcomputes attention weights over all other tokens in the 
+same input. Within the process,the inputs are projected into a key, query, and value representation Wk, Wq, and Wv. The query and key 
+representations are used to compute a weight for each token, which is then multiplied by that token’s value, such that the values for one
+attention head h(i) is defined as
+
+h(i)=softmax((Y W(i)q)(Y W(i)k)>)(Y W(i)v)
+
+Transformer  models  typically  usenof  these  self  attention  heads  in  parallel.    Their  outputsh(0), . . . , h(n−1)are 
+concatenated and followed by a final linear projection.   The output of thisprojection is used to calculate the token embedding used for 
+the next layer.
+
+
+ Previous research showed that individual heads seem to recognize common POS and DEP relationships,e.g., Objects of the Preposition (POBJ),
+Determinants (DET), and Possessive Adjectives (POSS), with high fidelity. Vigand Belinkov [2019] also explored the dependency relations 
+across heads and discovered that initiallayers typically encode positional relations, middle layers capture the most dependency relations,
+and later layers look for unique patterns and structures. These insights are exposed visually and interactively through EXBERT.
+
+Overview
+
+EXBERTfocuses on displaying a succinct view of both the attention and the internal representationsof each token. The attention belonging 
+to an input of lengthNat a particular layer for a particularhead can be understood as anN×Nmatrix, where each row represents the 
+attention out of thecorresponding token in the input, and each column represents the attention into that token. This isconducive to a 
+representation of curves pointing from each token to every other token. Representations,on the other hand, are best understood by 
+comparing the embedding of a token to the embeddingsof other tokens in an annotated corpus.  The most similar token embeddings, defined 
+by a nearestneighbor search, can be viewed in their corpus’ context in a language that humans can understand.
+
+
+Searching
+
+EXBERT performs a nearest neighbor search of embeddingson a reference corpus that is processed with linguistic features as follows. 
+First, the corpus is split bysentence, and its tokens are labeled for desired metadata (e.g., POS, DEP, NER). Searching by token 
+embeddings performs a Cosine Similarity (CS) search with the tokens in the corpus [Johnson et al.,2019]. The top 50 matches are displayed 
+and summarized for the user.Searching by head embeddings also involves a CS search against the corpus but requires an extensionof the 
+self attention definition. In our case, we define the head embedding 
+
+E(l)asE(l)=Concat( ̃h(l,0), . . . , ̃h(l,n−1)),
+
+where  ̃h(l,i) is defined as the normalized representation of headiat layerl.This normalization makes it possible to perform a CS search 
+over the head embeddings in ourpreprocessed corpus. To search the corpus for only a select subsetHs⊆{0, . . . , n−1}, we set all values 
+of ̃h(l,i)to0in our query head embedding E(l)wherei /∈Hs.
+
+
+
