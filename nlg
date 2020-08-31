@@ -1,1 +1,20 @@
 
+Natural Language Processing has two sub sections: Natual Language Understanding and Natural Language Generation.
+
+NLU takes up the understanding of the data based on grammar, the context in which it was said and decide on intent and entities.
+NLP converts a text into structured data.
+NLG generates a text based on structured data.
+
+Major applications of NLG
+
+There are many applications like describing graph nodes based on it's relationships and properties, generate questions, produce reports, etc. For our use case, we will focus on
+different methods to generate summary on a visualization dashboard. 
+
+The two below resources talks about NLG in a broad way:
+
+Paper: https://arxiv.org/pdf/1703.09902.pdf
+Blog: https://medium.com/sciforce/a-comprehensive-guide-to-natural-language-generation-dd63a4b6e548
+
+Let's look at the main components of the paper:
+
+
